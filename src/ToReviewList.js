@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   }
 })
 
-export default function AllList(props) {
+export default function ToReviewList(props) {
   const classes = useStyles()
 
   return (
@@ -27,11 +27,8 @@ export default function AllList(props) {
           <TableHead className={classes.tableHeader}>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell>created</TableCell>
-              <TableCell>learnDates</TableCell>
-              {/* temp */}
+              <TableCell>Review Dates</TableCell>
               <TableCell>next</TableCell>
-              <TableCell>interval</TableCell>
               <TableCell>tags</TableCell>
             </TableRow>
           </TableHead>
@@ -41,11 +38,8 @@ export default function AllList(props) {
                 <TableCell component="th" scope="row">
                   {item.name}
                 </TableCell>
-                <TableCell>{item.created}</TableCell>
                 <TableCell>{item.ReviewDates}</TableCell>
-                {/* temp */}
                 <TableCell>{item.next}</TableCell>
-                <TableCell>{item.interval}</TableCell>
                 <TableCell>{item.tags}</TableCell>
               </TableRow>
             ))}
