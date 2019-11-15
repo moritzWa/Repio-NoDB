@@ -1,39 +1,44 @@
 import React from "react"
-import { Paper, Select, MenuItem } from "@material-ui/core"
-import TextField from "@material-ui/core/TextField"
 import useInputState from "./hooks/useInputState"
 
+import { Paper, Select, MenuItem, Button, TextField } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
+import SaveIcon from "@material-ui/icons/Save"
 
 const useStyles = makeStyles(theme => ({
   FormPaper: {
     margin: "1rem",
     backgroundColor: "white",
-    padding: "3px"
+    padding: "3px",
+    textAlign: "right"
   },
-  container: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200
+  FormItem: {
+    margin: "10px"
   },
   selectEmpty: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(3.2)
+  },
+  submitButton: {
+    margin: "10px"
   }
 }))
 
-export default function Form({ addLearnItem }) {
+export default function Form({ addLearnItem, toBeChangedItem }) {
   const classes = useStyles()
+  console.log(toBeChangedItem)
 
   const [name, handleChangeName, resetName] = useInputState([])
   const [date, handleChangeDate, resetDate] = useInputState([])
+  const [doneNum, handleChangeDoneNum, resetDoneNum] = useInputState([])
   const [interval, handleChangeInterval, resetInterval] = useInputState([])
   const [tags, handleChangeTags, resetTags] = useInputState([])
 
-  let value = { name, date, interval, tags }
+  let value = { name, date, doneNum, interval, tags }
+
+  function checkForEdit() {
+    toBeChangedItem ? console.log("item found") : console.log("item not found")
+  }
+  checkForEdit()
 
   var today = new Date()
   var dd = String(today.getDate()).padStart(2, "0")
@@ -44,6 +49,7 @@ export default function Form({ addLearnItem }) {
   return (
     <Paper className={classes.FormPaper}>
       <form
+        className={classes.Form}
         onSubmit={e => {
           e.preventDefault()
           addLearnItem(value)
@@ -51,11 +57,18 @@ export default function Form({ addLearnItem }) {
           resetDate()
           resetInterval()
           resetTags()
+          resetDoneNum()
           console.log(value)
         }}
       >
-        <TextField value={name} label="Name" onChange={handleChangeName} />
         <TextField
+          className={classes.FormItem}
+          value={name}
+          label="Name"
+          onChange={console.log(handleChangeName)}
+        />
+        <TextField
+          className={classes.FormItem}
           required
           id="date"
           label="Date added"
@@ -67,10 +80,17 @@ export default function Form({ addLearnItem }) {
           }}
           onChange={handleChangeDate}
         />
+        <TextField
+          className={classes.FormItem}
+          type="number"
+          value={doneNum}
+          label="Reviews done"
+          onChange={handleChangeDoneNum}
+        />
         <Select
+          className={classes.selectEmpty}
           select
           value={interval}
-          className={classes.selectEmpty}
           label="Interval"
           onChange={handleChangeInterval}
           inputProps={{
@@ -78,11 +98,21 @@ export default function Form({ addLearnItem }) {
             id: "Interval"
           }}
         >
+          <MenuItem value="" disabled></MenuItem>
           <MenuItem value={"longterm"}>longterm</MenuItem>
           <MenuItem value={"shortterm"}>shortterm</MenuItem>
         </Select>
         {/*         <TextField value={tags} onChange={handleChangeTags} label="Tags" />
-         */}{" "}
+         */}
+        <Button
+          classNames={classes.submitButton}
+          startIcon={<SaveIcon />}
+          type="submit"
+          startIcon={<SaveIcon />}
+          color="primary"
+        >
+          Save
+        </Button>
       </form>
     </Paper>
   )

@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 
 import AllList from "./AllList"
-import ToReviewList from './ToReviewList'
+import ToReviewList from "./ToReviewList"
 import Form from "./Form"
 
 import SwipeableViews from "react-swipeable-views"
@@ -60,6 +60,9 @@ const useStyles = makeStyles(theme => ({
     margin: "6rem 1rem",
     backgroundColor: "white"
   },
+  title: {
+    fontFamily: "Bitter"
+  },
   appBar2: {
     borderRadius: "5px 5px 0 0"
   },
@@ -77,8 +80,11 @@ export default function RepioApp() {
       id: 1,
       name: "Zero to One",
       created: "12/10/2016",
-      ReviewDates: JSON.stringify(nextDatesArray(new Date('12/10/2016'))),
-      next: JSON.stringify(futureDateFunc(nextDatesArray(new Date('12/10/2016')))),
+      ReviewDates: JSON.stringify(nextDatesArray(new Date("12/10/2016"))),
+      next: JSON.stringify(
+        futureDateFunc(nextDatesArray(new Date("12/10/2016")))
+      ),
+      doneNum: 10,
       interval: "longTerm",
       tags: "business"
     },
@@ -87,44 +93,43 @@ export default function RepioApp() {
       name: "21 Lessons",
       created: "05/06/2018",
       ReviewDates: JSON.stringify(nextDatesArray(new Date("05/06/2018"))),
-      next: JSON.stringify(futureDateFunc(nextDatesArray(new Date("05/06/2018")))),
+      next: JSON.stringify(
+        futureDateFunc(nextDatesArray(new Date("05/06/2018")))
+      ),
+      doneNum: 5,
       interval: "shortterm",
       tags: "culture"
-    },
-   
+    }
   ]
 
   //======================  Business Logic  ======================//
-  console.log(initialLearnItems.next)  
-  
 
   function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
+    var result = new Date(date)
+    result.setDate(result.getDate() + days)
+    return result
   }
-  
+
   function nextDatesArray(date) {
     const interval = [1, 7, 14, 28, 56, 112, 224, 448]
-    
+
     let array = interval.map(i => addDays(date, i))
     return array
   }
 
-  function futureDateFunc(reviewDates){
+  function futureDateFunc(reviewDates) {
     //Get current time
     const now = Date.now()
     let futureDates = reviewDates.filter(date => {
       // Filter out dates in the past or falsey values
-      return date && (new Date(date)).getTime() > now
+      return date && new Date(date).getTime() > now
     })
-    return futureDates[0]
+    return futureDates[0] ? futureDates[0] : "done" //could be shortened
   }
 
   const [learnItems, setlearnItems] = useState(initialLearnItems)
 
   const addLearnItem = value => {
-
     let reviewDates = nextDatesArray(value.date)
     let nextToReview = futureDateFunc(reviewDates)
 
@@ -136,6 +141,7 @@ export default function RepioApp() {
         created: value.date,
         ReviewDates: JSON.stringify(reviewDates),
         next: JSON.stringify(nextToReview),
+        doneNum: value.doneNum,
         interval: value.interval,
         tags: "business"
       }
@@ -144,7 +150,18 @@ export default function RepioApp() {
     console.log(nextToReview)
   }
 
- 
+  const [toBeChangedItem, setToBeChangedItem] = useState("")
+  function findItem(event) {
+    var toBeChangedItem = learnItems.find(i => event === i.name)
+    console.log(toBeChangedItem)
+    setToBeChangedItem(toBeChangedItem)
+  }
+
+  function editItem(event) {
+    console.log(event)
+    findItem(event)
+  }
+
   //======================  style Logic  ======================//
 
   const classes = useStyles()
@@ -169,7 +186,7 @@ export default function RepioApp() {
       </AppBar>
       <Grid container justify="center" className={classes.pageContent}>
         <Grid item xs={11} md={10} lg={8}>
-          <Form addLearnItem={addLearnItem} />
+          <Form addLearnItem={addLearnItem} toBeChangedItem={toBeChangedItem} />
           <Paper className={classes.menuPaper}>
             <AppBar
               className={classes.appBar2}
@@ -195,10 +212,10 @@ export default function RepioApp() {
               onChangeIndex={handleChangeIndex}
             >
               <TabPanel value={value} index={0} dir={theme.direction}>
-               <ToReviewList learnItems={learnItems} />
+                <ToReviewList learnItems={learnItems} />
               </TabPanel>
               <TabPanel value={value} index={1} dir={theme.direction}>
-                <AllList learnItems={learnItems} />
+                <AllList editAppLevel={editItem} learnItems={learnItems} />
               </TabPanel>
               <TabPanel value={value} index={2} dir={theme.direction}>
                 Item Three

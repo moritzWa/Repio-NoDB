@@ -7,6 +7,8 @@ import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import Paper from "@material-ui/core/Paper"
 
+import EditIcon from "@material-ui/icons/Edit"
+
 const useStyles = makeStyles({
   root: {
     width: "100%",
@@ -20,6 +22,10 @@ const useStyles = makeStyles({
 export default function AllList(props) {
   const classes = useStyles()
 
+  function edit(event) {
+    props.editAppLevel(event)
+  }
+
   return (
     <>
       <Paper className={classes.root}>
@@ -31,13 +37,14 @@ export default function AllList(props) {
               <TableCell>learnDates</TableCell>
               {/* temp */}
               <TableCell>next</TableCell>
+              <TableCell>Revies Done</TableCell>
               <TableCell>interval</TableCell>
               <TableCell>tags</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {props.learnItems.map(item => (
-              <TableRow key={item.name}>
+              <TableRow key={item.name} id={item.name}>
                 <TableCell component="th" scope="row">
                   {item.name}
                 </TableCell>
@@ -45,8 +52,12 @@ export default function AllList(props) {
                 <TableCell>{item.ReviewDates}</TableCell>
                 {/* temp */}
                 <TableCell>{item.next}</TableCell>
+                <TableCell>{item.doneNum}/10</TableCell>
                 <TableCell>{item.interval}</TableCell>
                 <TableCell>{item.tags}</TableCell>
+                <TableCell>
+                  <EditIcon onClick={() => edit(item.name)} />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
