@@ -8,6 +8,7 @@ import TableRow from "@material-ui/core/TableRow"
 import Paper from "@material-ui/core/Paper"
 
 import EditIcon from "@material-ui/icons/Edit"
+import DeleteIcon from "@material-ui/icons/Delete"
 
 const useStyles = makeStyles({
   root: {
@@ -22,10 +23,6 @@ const useStyles = makeStyles({
 export default function AllList(props) {
   const classes = useStyles()
 
-  function edit(event) {
-    props.editAppLevel(event)
-  }
-
   return (
     <>
       <Paper className={classes.root}>
@@ -35,28 +32,42 @@ export default function AllList(props) {
               <TableCell>Name</TableCell>
               <TableCell>created</TableCell>
               <TableCell>learnDates</TableCell>
-              {/* temp */}
               <TableCell>next</TableCell>
-              <TableCell>Revies Done</TableCell>
+              <TableCell>Reviews Done</TableCell>
               <TableCell>interval</TableCell>
               <TableCell>tags</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.learnItems.map(item => (
+            {props.items.map(item => (
               <TableRow key={item.name} id={item.name}>
                 <TableCell component="th" scope="row">
                   {item.name}
                 </TableCell>
-                <TableCell>{item.created}</TableCell>
-                <TableCell>{item.ReviewDates}</TableCell>
-                {/* temp */}
-                <TableCell>{item.next}</TableCell>
+                <TableCell>
+                  {new Date(item.date).toLocaleDateString("en-US")}
+                </TableCell>
+                <TableCell>
+                  {item.reviewDates
+                    .map(i => i.toLocaleDateString("en-US"))
+                    .join(", ")}
+                </TableCell>
+                <TableCell>
+                  {item.nextToReview === "finish"
+                    ? "finish"
+                    : new Date(item.nextToReview).toLocaleDateString("en-US")}
+                </TableCell>
+                {console.log(props.items, item.nextToReview === "finish")}
                 <TableCell>{item.doneNum}/10</TableCell>
                 <TableCell>{item.interval}</TableCell>
                 <TableCell>{item.tags}</TableCell>
                 <TableCell>
-                  <EditIcon onClick={() => edit(item.name)} />
+                  <EditIcon
+                    onClick={() => {
+                      props.editRow(item)
+                    }}
+                  />
+                  <DeleteIcon onClick={() => props.deleteItem(item.id)} />
                 </TableCell>
               </TableRow>
             ))}

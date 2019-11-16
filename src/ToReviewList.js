@@ -33,13 +33,19 @@ export default function ToReviewList(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.learnItems.map(item => (
+            {props.items.map(item => (
               <TableRow key={item.name}>
                 <TableCell component="th" scope="row">
                   {item.name}
                 </TableCell>
-                <TableCell>{item.ReviewDates}</TableCell>
-                <TableCell>{item.next}</TableCell>
+                <TableCell>
+                  {item.reviewDates
+                    .map(i => i.toLocaleDateString("en-US"))
+                    .join(", ")}
+                </TableCell>
+                <TableCell>
+                  {new Date(item.nextToReview).toLocaleDateString("en-US")}
+                </TableCell>
                 <TableCell>{item.tags}</TableCell>
               </TableRow>
             ))}

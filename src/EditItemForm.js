@@ -41,19 +41,17 @@ const intervals = [
   }
 ]
 
-export default function Form({ addLearnItem, toBeChangedItem }) {
+export default function EditItemForm(props) {
+  console.log(props)
+
   const classes = useStyles()
   const [interval, setInterval] = React.useState("longterm")
 
-  const initialFormState = {
-    id: null,
-    name: "",
-    date: new Date(),
-    doneNum: 0,
-    interval: "",
-    tags: ""
-  }
-  const [item, setItem] = useState(initialFormState)
+  const [item, setItem] = useState(props.currentItem)
+
+  useEffect(() => {
+    setItem(props.currentItem)
+  }, [props])
 
   const handleInputChange = event => {
     const { name, value } = event.target
@@ -66,9 +64,8 @@ export default function Form({ addLearnItem, toBeChangedItem }) {
         className={classes.Form}
         onSubmit={e => {
           e.preventDefault()
-          addLearnItem(item)
-          console.log(item)
-          setItem(initialFormState)
+          props.updateItem(item.id, item)
+          console.log(item.id, item)
         }}
       >
         <TextField
@@ -134,7 +131,7 @@ export default function Form({ addLearnItem, toBeChangedItem }) {
           startIcon={<SaveIcon />}
           color="primary"
         >
-          Save
+          Save Changes
         </Button>
       </form>
     </Paper>

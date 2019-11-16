@@ -4,20 +4,15 @@ import PropTypes from "prop-types"
 import AllList from "./AllList"
 import ToReviewList from "./ToReviewList"
 import Form from "./Form"
+import EditItemForm from "./EditItemForm"
 
 import SwipeableViews from "react-swipeable-views"
 
-import {
-  Typography,
-  Paper,
-  AppBar,
-  Toolbar,
-  Grid,
-  Tabs,
-  Tab,
-  Box
-} from "@material-ui/core/"
+import { Typography, Paper, AppBar, Grid } from "@material-ui/core/"
+import { Toolbar, Tabs, Tab, Box } from "@material-ui/core/"
 import { makeStyles, useTheme } from "@material-ui/core/styles"
+
+//======================  style Logic  ======================//
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -56,9 +51,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "#505050",
     borderRadius: 0
   },
+  headAppBar: { height: "64px", backgroundColor: "#4071BC" },
   menuPaper: {
-    margin: "6rem 1rem",
-    backgroundColor: "white"
+    margin: "1rem 1rem"
   },
   title: {
     fontFamily: "Bitter"
@@ -71,19 +66,27 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-//
-//
-
 export default function RepioApp() {
+  const classes = useStyles()
+  const theme = useTheme()
+
+  const [value, setValue] = React.useState(0)
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
+  }
+  const handleChangeIndex = index => {
+    setValue(index)
+  }
+
+  //======================  Business Logic  ======================//
+
   const initialLearnItems = [
     {
-      id: 1,
+      id: 0,
       name: "Zero to One",
-      created: "12/10/2016",
-      ReviewDates: JSON.stringify(nextDatesArray(new Date("12/10/2016"))),
-      next: JSON.stringify(
-        futureDateFunc(nextDatesArray(new Date("12/10/2016")))
-      ),
+      date: new Date("12/10/2016").toLocaleDateString("en-US"),
+      reviewDates: nextDatesArray(new Date("12/10/2016")),
+      nextToReview: futureDateFunc(nextDatesArray(new Date("12/10/2016"))),
       doneNum: 10,
       interval: "longTerm",
       tags: "business"
@@ -91,18 +94,14 @@ export default function RepioApp() {
     {
       id: 1,
       name: "21 Lessons",
-      created: "05/06/2018",
-      ReviewDates: JSON.stringify(nextDatesArray(new Date("05/06/2018"))),
-      next: JSON.stringify(
-        futureDateFunc(nextDatesArray(new Date("05/06/2018")))
-      ),
+      date: new Date("05/06/2018").toLocaleDateString("en-US"),
+      reviewDates: nextDatesArray(new Date("05/06/2018")),
+      nextToReview: futureDateFunc(nextDatesArray(new Date("05/06/2018"))),
       doneNum: 5,
       interval: "shortterm",
       tags: "culture"
     }
   ]
-
-  //======================  Business Logic  ======================//
 
   function addDays(date, days) {
     var result = new Date(date)
@@ -124,60 +123,65 @@ export default function RepioApp() {
       // Filter out dates in the past or falsey values
       return date && new Date(date).getTime() > now
     })
-    return futureDates[0] ? futureDates[0] : "done" //could be shortened
+    return futureDates[0] ? futureDates[0] : "finish" //could be shortened
   }
 
-  const [learnItems, setlearnItems] = useState(initialLearnItems)
+  //==================== new Logic ==================//
 
-  const addLearnItem = value => {
-    let reviewDates = nextDatesArray(value.date)
-    let nextToReview = futureDateFunc(reviewDates)
-
-    setlearnItems([
-      ...learnItems,
-      {
-        id: 1,
-        name: value.name,
-        created: value.date,
-        ReviewDates: JSON.stringify(reviewDates),
-        next: JSON.stringify(nextToReview),
-        doneNum: value.doneNum,
-        interval: value.interval,
-        tags: "business"
-      }
-    ])
-    console.log(reviewDates)
-    console.log(nextToReview)
+  const initialFormState = {
+    id: null,
+    name: "",
+    date: null,
+    doneNum: 0,
+    interval: "",
+    tags: ""
   }
 
-  const [toBeChangedItem, setToBeChangedItem] = useState("")
-  function findItem(event) {
+  //Setting state
+  //const [ users, setUsers ] = useState(usersData)
+
+  const [items, setItems] = useState(initialLearnItems)
+  const [currentItem, setCurrentItem] = useState(initialFormState)
+  const [editing, setEditing] = useState(false)
+
+  //CRUD operations
+  const addLearnItem = item => {
+    item.reviewDates = nextDatesArray(item.date)
+    item.nextToReview = futureDateFunc(item.reviewDates)
+    item.id = items.length + 1
+
+    setItems([...items, item])
+  }
+
+  const deleteItem = id => {
+    setEditing(false)
+    setItems(items.filter(item => item.id !== id))
+  }
+
+  const editRow = item => {
+    setEditing(true)
+    setCurrentItem(item)
+  }
+
+  const updateItem = (id, updatedItem) => {
+    setEditing(false)
+    setItems(items.map(item => (item.id === id ? updatedItem : item)))
+  }
+
+  /* function findItem(event) {
     var toBeChangedItem = learnItems.find(i => event === i.name)
     console.log(toBeChangedItem)
     setToBeChangedItem(toBeChangedItem)
-  }
+  } */
 
-  function editItem(event) {
+  /* function editItem(event) {
     console.log(event)
     findItem(event)
-  }
-
-  //======================  style Logic  ======================//
-
-  const classes = useStyles()
-  const theme = useTheme()
-
-  const [value, setValue] = React.useState(0)
-  const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
-  const handleChangeIndex = index => {
-    setValue(index)
-  }
+  } */
 
   return (
     <Paper className={classes.backgroundPaper} elevation={0}>
-      <AppBar position="primary" style={{ height: "64px" }}>
+      <AppBar position="static" className={classes.headAppBar}>
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap>
             Repio - Spaced Repititon
@@ -186,7 +190,20 @@ export default function RepioApp() {
       </AppBar>
       <Grid container justify="center" className={classes.pageContent}>
         <Grid item xs={11} md={10} lg={8}>
-          <Form addLearnItem={addLearnItem} toBeChangedItem={toBeChangedItem} />
+          {editing ? (
+            <>
+              <EditItemForm
+                editing={editing}
+                setEditing={setEditing}
+                currentItem={currentItem}
+                updateItem={updateItem}
+              />
+            </>
+          ) : (
+            <>
+              <Form addLearnItem={addLearnItem} />
+            </>
+          )}
           <Paper className={classes.menuPaper}>
             <AppBar
               className={classes.appBar2}
@@ -212,10 +229,14 @@ export default function RepioApp() {
               onChangeIndex={handleChangeIndex}
             >
               <TabPanel value={value} index={0} dir={theme.direction}>
-                <ToReviewList learnItems={learnItems} />
+                <ToReviewList items={items} />
               </TabPanel>
               <TabPanel value={value} index={1} dir={theme.direction}>
-                <AllList editAppLevel={editItem} learnItems={learnItems} />
+                <AllList
+                  items={items}
+                  deleteItem={deleteItem}
+                  editRow={editRow}
+                />
               </TabPanel>
               <TabPanel value={value} index={2} dir={theme.direction}>
                 Item Three
