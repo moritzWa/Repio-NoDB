@@ -50,16 +50,8 @@ export default function AllList(props) {
                 <TableCell>
                   {new Date(item.date).toLocaleDateString("en-US")}
                 </TableCell>
-                <TableCell>
-                  {item.reviewDates
-                    .map(i => i.toLocaleDateString("en-US"))
-                    .join(", ")}
-                </TableCell>
-                <TableCell>
-                  {item.nextToReview === "finish"
-                    ? "finish"
-                    : new Date(item.nextToReview).toLocaleDateString("en-US")}
-                </TableCell>
+                <TableCell>test</TableCell>
+                <TableCell>test</TableCell>
                 <TableCell>{item.doneNum}/10</TableCell>
                 <TableCell>{item.interval}</TableCell>
                 <TableCell>{item.tags}</TableCell>

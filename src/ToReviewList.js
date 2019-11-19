@@ -43,9 +43,8 @@ export default function ToReviewList(props) {
                   {item.name}
                 </TableCell>
                 <TableCell>
-                  {item.reviewDates
-                    .map(i => i.toLocaleDateString("en-US"))
-                    .join(", ")}
+                  {" "}
+                  {new Date(item.date).toLocaleDateString("en-US")}
                 </TableCell>
                 <TableCell>
                   {new Date(item.nextToReview).toLocaleDateString("en-US")}

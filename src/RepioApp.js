@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 
 import AllList from "./AllList"
 import ToReviewList from "./ToReviewList"
-import Form from "./Form"
+import AddForm from "./AddForm"
 import EditItemForm from "./EditItemForm"
 
 import SwipeableViews from "react-swipeable-views"
@@ -83,20 +83,148 @@ export default function RepioApp() {
   const initialLearnItems = [
     {
       id: 0,
-      name: "Zero to One",
-      date: new Date("12/10/2016").toLocaleDateString("en-US"),
-      reviewDates: nextDatesArray(new Date("12/10/2016")),
-      nextToReview: futureDateFunc(nextDatesArray(new Date("12/10/2016"))),
-      doneNum: 10,
-      interval: "longTerm",
-      tags: "business"
-    },
-    {
-      id: 1,
       name: "21 Lessons",
       date: new Date("05/06/2018").toLocaleDateString("en-US"),
-      reviewDates: nextDatesArray(new Date("05/06/2018")),
-      nextToReview: futureDateFunc(nextDatesArray(new Date("05/06/2018"))),
+      reps: [
+        {
+          Nr: 1,
+          distence: 1,
+          date: new Date(
+            "Wed Jun 06 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 2,
+          distence: 7,
+          date: new Date(
+            "Tue Jun 12 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 3,
+          distence: 14,
+          date: new Date(
+            "Tue Jun 19 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 4,
+          distence: 28,
+          date: new Date(
+            "Tue Jul 03 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 5,
+          distence: 56,
+          date: new Date(
+            "Tue Jul 31 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 6,
+          distence: 112,
+          date: new Date(
+            "Tue Sep 25 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 7,
+          distence: 224,
+          date: new Date(
+            "Tue Jan 15 2019 02:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 8,
+          distence: 448,
+          date: new Date(
+            "Tue Aug 27 2019 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        }
+      ],
+      doneNum: 2,
+      interval: "shortterm",
+      tags: "culture"
+    },
+    {
+      id: 2,
+      name: "zero",
+      date: new Date("05/06/2018").toLocaleDateString("en-US"),
+      reps: [
+        {
+          Nr: 1,
+          distence: 1,
+          date: new Date(
+            "Wed Jun 06 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 2,
+          distence: 7,
+          date: new Date(
+            "Tue Jun 12 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 3,
+          distence: 14,
+          date: new Date(
+            "Tue Jun 19 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 4,
+          distence: 28,
+          date: new Date(
+            "Tue Jul 03 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 5,
+          distence: 56,
+          date: new Date(
+            "Tue Jul 31 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 6,
+          distence: 112,
+          date: new Date(
+            "Tue Sep 25 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 7,
+          distence: 224,
+          date: new Date(
+            "Tue Jan 15 2019 02:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
+          ),
+          isDone: true
+        },
+        {
+          Nr: 8,
+          distence: 448,
+          date: new Date(
+            "Tue Aug 27 2019 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          ),
+          isDone: true
+        }
+      ],
       doneNum: 5,
       interval: "shortterm",
       tags: "culture"
@@ -109,27 +237,6 @@ export default function RepioApp() {
     return result
   }
 
-  function nextDatesArray(date) {
-    const interval = [1, 7, 14, 28, 56, 112, 224, 448]
-
-    let array = interval.map(i => addDays(date, i))
-    return array
-  }
-
-  //show first date from future dates
-
-  function futureDateFunc(reviewDates) {
-    //Get current time
-    const now = Date.now()
-    let futureDates = reviewDates.filter(date => {
-      // Filter out dates in the past or falsey values
-      return date && new Date(date).getTime() > now
-    })
-    return futureDates[0] ? futureDates[0] : "finish" //could be shortened
-  }
-
-  //==================== new Logic ==================//
-
   const initialFormState = {
     id: null,
     name: "",
@@ -139,6 +246,14 @@ export default function RepioApp() {
     tags: ""
   }
 
+  function createReps(item) {
+    var repsArray = item.reps.map(i => ({
+      ...i,
+      isDone: item.doneNum >= i.Nr ? true : false,
+      date: addDays(item.date, i.distence)
+    }))
+    return repsArray
+  }
   //Setting state
   //const [ users, setUsers ] = useState(usersData)
 
@@ -146,13 +261,12 @@ export default function RepioApp() {
   const [currentItem, setCurrentItem] = useState(initialFormState)
   const [editing, setEditing] = useState(false)
 
-  //CRUD operations
   const addLearnItem = item => {
-    item.reviewDates = nextDatesArray(item.date)
-    item.nextToReview = futureDateFunc(item.reviewDates)
+    //CRUD operations
+    item.reps = createReps(item)
     item.id = items.length + 1
-
     setItems([...items, item])
+    console.log(item)
   }
 
   const deleteItem = id => {
@@ -167,17 +281,20 @@ export default function RepioApp() {
 
   const updateItem = (id, updatedItem) => {
     setEditing(false)
+    updatedItem.reps = createReps(updatedItem)
     setItems(items.map(item => (item.id === id ? updatedItem : item)))
   }
 
+  //could shorten this
   const setItemAsDone = id => {
     setEditing(false)
-    setItems(
-      items.map(item =>
-        item.id === id ? { ...item, doneNum: Number(item.doneNum) + 1 } : item
-      )
-    )
+    let itemInProcess = items.find(item => item.id === id)
+    itemInProcess.doneNum = Number(itemInProcess.doneNum) + 1
+    itemInProcess.reps = createReps(itemInProcess)
+
+    setItems(items.map(item => (item.id === id ? itemInProcess : item)))
   }
+  console.log(items[2])
 
   return (
     <Paper className={classes.backgroundPaper} elevation={0}>
@@ -201,7 +318,7 @@ export default function RepioApp() {
             </>
           ) : (
             <>
-              <Form addLearnItem={addLearnItem} />
+              <AddForm addLearnItem={addLearnItem} />
             </>
           )}
           <Paper className={classes.menuPaper}>

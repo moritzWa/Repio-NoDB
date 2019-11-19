@@ -58,8 +58,19 @@ export default function Form({ addLearnItem }) {
     date: new Date(),
     doneNum: 0,
     interval: "",
+    reps: [
+      { Nr: 1, distence: 1 },
+      { Nr: 2, distence: 7 },
+      { Nr: 3, distence: 14 },
+      { Nr: 4, distence: 28 },
+      { Nr: 5, distence: 56 },
+      { Nr: 6, distence: 112 },
+      { Nr: 7, distence: 224 },
+      { Nr: 8, distence: 448 }
+    ],
     tags: ""
   }
+
   const [item, setItem] = useState(initialFormState)
 
   const handleInputChange = event => {
@@ -74,7 +85,6 @@ export default function Form({ addLearnItem }) {
         onSubmit={e => {
           e.preventDefault()
           addLearnItem(item)
-          console.log(item)
           setItem(initialFormState)
         }}
       >
