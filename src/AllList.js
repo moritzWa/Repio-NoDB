@@ -1,5 +1,7 @@
 import React from "react"
-import { withStyles, makeStyles } from "@material-ui/core/styles"
+import { makeStyles } from "@material-ui/core/styles"
+import IconButton from "@material-ui/core/IconButton"
+
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
@@ -36,6 +38,7 @@ export default function AllList(props) {
               <TableCell>Reviews Done</TableCell>
               <TableCell>interval</TableCell>
               <TableCell>tags</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -57,17 +60,28 @@ export default function AllList(props) {
                     ? "finish"
                     : new Date(item.nextToReview).toLocaleDateString("en-US")}
                 </TableCell>
-                {console.log(props.items, item.nextToReview === "finish")}
                 <TableCell>{item.doneNum}/10</TableCell>
                 <TableCell>{item.interval}</TableCell>
                 <TableCell>{item.tags}</TableCell>
                 <TableCell>
-                  <EditIcon
+                  <IconButton
                     onClick={() => {
                       props.editRow(item)
                     }}
-                  />
-                  <DeleteIcon onClick={() => props.deleteItem(item.id)} />
+                    color="primary"
+                    className={classes.button}
+                    aria-label="Edit Item"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => props.deleteItem(item.id)}
+                    color="primary"
+                    className={classes.button}
+                    aria-label="Delete item"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

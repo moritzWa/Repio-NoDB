@@ -1,5 +1,8 @@
 import React from "react"
-import { withStyles, makeStyles } from "@material-ui/core/styles"
+import { makeStyles } from "@material-ui/core/styles"
+import CheckIcon from "@material-ui/icons/Check"
+import IconButton from "@material-ui/core/IconButton"
+
 import Table from "@material-ui/core/Table"
 import TableBody from "@material-ui/core/TableBody"
 import TableCell from "@material-ui/core/TableCell"
@@ -30,6 +33,7 @@ export default function ToReviewList(props) {
               <TableCell>Review Dates</TableCell>
               <TableCell>next</TableCell>
               <TableCell>tags</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -47,6 +51,16 @@ export default function ToReviewList(props) {
                   {new Date(item.nextToReview).toLocaleDateString("en-US")}
                 </TableCell>
                 <TableCell>{item.tags}</TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => props.setItemAsDone(item.id)}
+                    color="primary"
+                    className={classes.button}
+                    aria-label="Review done"
+                  >
+                    <CheckIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

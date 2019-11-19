@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 
-import { Paper, Select, MenuItem, Button, TextField } from "@material-ui/core"
+import { Paper, MenuItem, Button, TextField } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import SaveIcon from "@material-ui/icons/Save"
 
@@ -42,10 +42,7 @@ const intervals = [
 ]
 
 export default function EditItemForm(props) {
-  console.log(props)
-
   const classes = useStyles()
-  const [interval, setInterval] = React.useState("longterm")
 
   const [item, setItem] = useState(props.currentItem)
 

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 
-import { Paper, Select, MenuItem, Button, TextField } from "@material-ui/core"
+import { Paper, MenuItem, Button, TextField } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import SaveIcon from "@material-ui/icons/Save"
 
@@ -14,16 +14,24 @@ const useStyles = makeStyles(theme => ({
   FormItem: {
     margin: "10px"
   },
-  selectEmpty: {
-    marginTop: theme.spacing(3.2)
+  FormItemDate: {
+    margin: "10px",
+    width: "120px"
+  },
+  FormItemReviews: {
+    margin: "10px",
+    width: "80px"
+  },
+  FormItemSelect: {
+    margin: "10px",
+    width: "100px"
+  },
+  FormItemTags: {
+    margin: "10px",
+    width: "100px"
   },
   submitButton: {
-    margiaen: "20px"
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "100px"
+    margin: "20px"
   },
   menu: {
     width: 200
@@ -41,9 +49,8 @@ const intervals = [
   }
 ]
 
-export default function Form({ addLearnItem, toBeChangedItem }) {
+export default function Form({ addLearnItem }) {
   const classes = useStyles()
-  const [interval, setInterval] = React.useState("longterm")
 
   const initialFormState = {
     id: null,
@@ -83,7 +90,7 @@ export default function Form({ addLearnItem, toBeChangedItem }) {
         />
         <TextField
           name="date"
-          className={classes.FormItem}
+          className={classes.FormItemDate}
           value={item.date}
           id="date"
           label="Date added"
@@ -95,15 +102,15 @@ export default function Form({ addLearnItem, toBeChangedItem }) {
         />
         <TextField
           name="doneNum"
-          className={classes.FormItem}
+          className={classes.FormItemReviews}
           type="number"
           value={item.doneNum}
-          label="Reviews done"
+          label="Reps done"
           onChange={handleInputChange}
         />
         <TextField
           name="interval"
-          className={classes.textField}
+          className={classes.FormItemSelect}
           value={item.interval}
           select
           label="Interval"
@@ -123,6 +130,7 @@ export default function Form({ addLearnItem, toBeChangedItem }) {
         </TextField>
         <TextField
           name="tags"
+          className={classes.FormItemTags}
           value={item.tags}
           onChange={handleInputChange}
           label="Tags"

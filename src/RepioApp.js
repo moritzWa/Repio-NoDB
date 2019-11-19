@@ -116,6 +116,8 @@ export default function RepioApp() {
     return array
   }
 
+  //show first date from future dates
+
   function futureDateFunc(reviewDates) {
     //Get current time
     const now = Date.now()
@@ -168,16 +170,14 @@ export default function RepioApp() {
     setItems(items.map(item => (item.id === id ? updatedItem : item)))
   }
 
-  /* function findItem(event) {
-    var toBeChangedItem = learnItems.find(i => event === i.name)
-    console.log(toBeChangedItem)
-    setToBeChangedItem(toBeChangedItem)
-  } */
-
-  /* function editItem(event) {
-    console.log(event)
-    findItem(event)
-  } */
+  const setItemAsDone = id => {
+    setEditing(false)
+    setItems(
+      items.map(item =>
+        item.id === id ? { ...item, doneNum: Number(item.doneNum) + 1 } : item
+      )
+    )
+  }
 
   return (
     <Paper className={classes.backgroundPaper} elevation={0}>
@@ -229,7 +229,7 @@ export default function RepioApp() {
               onChangeIndex={handleChangeIndex}
             >
               <TabPanel value={value} index={0} dir={theme.direction}>
-                <ToReviewList items={items} />
+                <ToReviewList items={items} setItemAsDone={setItemAsDone} />
               </TabPanel>
               <TabPanel value={value} index={1} dir={theme.direction}>
                 <AllList
