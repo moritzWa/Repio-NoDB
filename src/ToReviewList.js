@@ -23,6 +23,38 @@ const useStyles = makeStyles({
 export default function ToReviewList(props) {
   const classes = useStyles()
 
+  //look for overdo reps in obj
+  const filterOverDoRepsInOpj = item => {
+    let overdoReps = item.reps.filter(
+      rep => !rep.isDone && rep.date < new Date()
+    )
+    return overdoReps //returns reps
+  }
+
+  //finnd item that has overdo reps
+  const filterOverDoItems = array => {
+    let arr = []
+    array.forEach(element => {
+      element.reps.forEach(rep => {
+        if (!rep.isDone && rep.date < new Date() && !arr.includes(element)) {
+          arr.push(element)
+        }
+      })
+    })
+    return arr //returns items
+  }
+
+  let test = filterOverDoItems(props.items)
+  console.log(test)
+
+  //OverDo Distence
+  //display DISTENCE of last overdo rep from one overdo item
+  let DistenceForOneItem = test[0].reps.filter(rep => {if(rep.isDone || rep.date < new Date()){ return rep}})
+  console.log((DistenceForOneItem.slice(-1)[0].date - new Date()) / (1000 * 3600 * 24))
+
+ 
+
+
   return (
     <>
       <Paper className={classes.root}>
@@ -31,23 +63,22 @@ export default function ToReviewList(props) {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Review Dates</TableCell>
-              <TableCell>next</TableCell>
+              <TableCell>Overdo since</TableCell>
               <TableCell>tags</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.items.map(item => (
+            {filterOverDoItems(props.items).map(item => (
               <TableRow key={item.name}>
                 <TableCell component="th" scope="row">
                   {item.name}
                 </TableCell>
                 <TableCell>
-                  {" "}
                   {new Date(item.date).toLocaleDateString("en-US")}
                 </TableCell>
                 <TableCell>
-                  {new Date(item.nextToReview).toLocaleDateString("en-US")}
+                  test
                 </TableCell>
                 <TableCell>{item.tags}</TableCell>
                 <TableCell>

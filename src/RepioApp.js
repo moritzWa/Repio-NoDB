@@ -151,88 +151,88 @@ export default function RepioApp() {
           isDone: true
         }
       ],
-      doneNum: 2,
+      doneNum: 8,
       interval: "shortterm",
       tags: "culture"
     },
     {
       id: 2,
-      name: "zero",
-      date: new Date("05/06/2018").toLocaleDateString("en-US"),
+      name: "Zeroo",
+      date: new Date("2019-11-01").toLocaleDateString("en-US"),
       reps: [
         {
           Nr: 1,
           distence: 1,
+          isDone: true,
           date: new Date(
-            "Wed Jun 06 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
-          ),
-          isDone: true
+            "Sat Nov 02 2019 01:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
+          )
         },
         {
           Nr: 2,
           distence: 7,
+          isDone: false,
           date: new Date(
-            "Tue Jun 12 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
-          ),
-          isDone: true
+            "i Nov 08 2019 01:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
+          )
         },
         {
           Nr: 3,
           distence: 14,
+          isDone: false,
           date: new Date(
-            "Tue Jun 19 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
-          ),
-          isDone: true
+            "Fri Nov 15 2019 01:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
+          )
         },
         {
           Nr: 4,
           distence: 28,
+          isDone: false,
           date: new Date(
-            "Tue Jul 03 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
-          ),
-          isDone: true
+            "Fri Nov 29 2019 01:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
+          )
         },
         {
           Nr: 5,
           distence: 56,
+          isDone: false,
           date: new Date(
-            "Tue Jul 31 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
-          ),
-          isDone: true
+            "Fri Dec 27 2019 01:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
+          )
         },
         {
           Nr: 6,
           distence: 112,
+          isDone: false,
           date: new Date(
-            "Tue Sep 25 2018 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
-          ),
-          isDone: true
+            "Fri Feb 21 2020 01:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
+          )
         },
         {
           Nr: 7,
           distence: 224,
+          isDone: false,
           date: new Date(
-            "Tue Jan 15 2019 02:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
-          ),
-          isDone: true
+            "Fri Jun 12 2020 01:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+          )
         },
         {
           Nr: 8,
           distence: 448,
+          isDone: false,
           date: new Date(
-            "Tue Aug 27 2019 02:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
-          ),
-          isDone: true
+            "Fri Jan 22 2021 01:00:00 GMT+0100 (Mitteleuropäische Normalzeit)"
+          )
         }
       ],
-      doneNum: 5,
+      doneNum: 2,
       interval: "shortterm",
-      tags: "culture"
+      tags: "business"
     }
   ]
 
   function addDays(date, days) {
-    var result = new Date(date)
+    let result = new Date(date)
     result.setDate(result.getDate() + days)
     return result
   }
@@ -247,7 +247,7 @@ export default function RepioApp() {
   }
 
   function createReps(item) {
-    var repsArray = item.reps.map(i => ({
+    let repsArray = item.reps.map(i => ({
       ...i,
       isDone: item.doneNum >= i.Nr ? true : false,
       date: addDays(item.date, i.distence)
@@ -294,7 +294,6 @@ export default function RepioApp() {
 
     setItems(items.map(item => (item.id === id ? itemInProcess : item)))
   }
-  console.log(items[2])
 
   return (
     <Paper className={classes.backgroundPaper} elevation={0}>
