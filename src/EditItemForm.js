@@ -116,10 +116,10 @@ export default function EditItemForm(props) {
           ))}
         </TextField>
         <TextField
-          name="tags"
-          value={item.tags}
+          name="category"
+          value={item.category}
           onChange={handleInputChange}
-          label="Tags"
+          label="Category"
         />
 
         <Button

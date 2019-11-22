@@ -68,7 +68,7 @@ export default function Form({ addLearnItem }) {
       { Nr: 7, distence: 224 },
       { Nr: 8, distence: 448 }
     ],
-    tags: ""
+    category: ""
   }
 
   const [item, setItem] = useState(initialFormState)
@@ -139,11 +139,11 @@ export default function Form({ addLearnItem }) {
           ))}
         </TextField>
         <TextField
-          name="tags"
+          name="category"
           className={classes.FormItemTags}
-          value={item.tags}
+          value={item.category}
           onChange={handleInputChange}
-          label="Tags"
+          label="Category"
         />
 
         <Button

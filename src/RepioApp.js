@@ -63,6 +63,10 @@ const useStyles = makeStyles(theme => ({
   },
   pageContent: {
     display: "flex"
+  },
+  test: {
+    background: "blue",
+    padding: "0px"
   }
 }))
 
@@ -152,8 +156,9 @@ export default function RepioApp() {
         }
       ],
       doneNum: 8,
+      overDoDays: 0,
       interval: "shortterm",
-      tags: "culture"
+      category: "culture"
     },
     {
       id: 2,
@@ -226,8 +231,9 @@ export default function RepioApp() {
         }
       ],
       doneNum: 2,
+      overDoDays: -41,
       interval: "shortterm",
-      tags: "business"
+      category: "business"
     }
   ]
 
@@ -243,10 +249,12 @@ export default function RepioApp() {
     date: null,
     doneNum: 0,
     interval: "",
-    tags: ""
+    category: ""
   }
 
-  function createReps(item) {
+  //======================= expand item info =========================lll
+
+  const createReps = item => {
     let repsArray = item.reps.map(i => ({
       ...i,
       isDone: item.doneNum >= i.Nr ? true : false,
@@ -254,6 +262,22 @@ export default function RepioApp() {
     }))
     return repsArray
   }
+
+  //get distence of overdo rep from filteredItem
+  const createOverDoDays = item => {
+    let overDoReps = item.reps.filter(rep => {
+      if (!rep.isDone && rep.date < new Date()) {
+        return rep //evtl inline?
+      }
+    })
+    if (overDoReps.length > 0) {
+      let overDoDays = Math.floor(
+        (overDoReps[0].date - new Date()) / (1000 * 3600 * 24) + 1
+      )
+      return overDoDays
+    } else return 0
+  }
+
   //Setting state
   //const [ users, setUsers ] = useState(usersData)
 
@@ -264,6 +288,7 @@ export default function RepioApp() {
   const addLearnItem = item => {
     //CRUD operations
     item.reps = createReps(item)
+    item.overDoDays = createOverDoDays(item)
     item.id = items.length + 1
     setItems([...items, item])
     console.log(item)
@@ -329,6 +354,27 @@ export default function RepioApp() {
     console.log(key, direction, newOrder)
   }
 
+  //======================= Filter for ToReview Locic =========================lll
+
+  //finnd item that has overdo reps
+  const filterOverDoItems = items => {
+    let filteredArray = []
+    items.forEach(element => {
+      element.reps.forEach(rep => {
+        if (
+          !rep.isDone &&
+          rep.date < new Date() &&
+          !filteredArray.includes(element)
+        ) {
+          filteredArray.push(element)
+        }
+      })
+    })
+    return filteredArray //returns items
+  }
+
+  let filteredItems = filterOverDoItems(items)
+
   return (
     <Paper className={classes.backgroundPaper} elevation={0}>
       <AppBar position="static" className={classes.headAppBar}>
@@ -376,11 +422,16 @@ export default function RepioApp() {
             <SwipeableViews
               axis={theme.direction === "rtl" ? "x-reverse" : "x"}
               index={value}
-              onChangeIndex={handleChangeIndex}
             >
-              <TabPanel value={value} index={0} dir={theme.direction}>
+              <TabPanel
+                className={classes.test}
+                value={value}
+                index={0}
+                dir={theme.direction}
+              >
                 <ToReviewList
-                  items={items}
+                  className={classes.test}
+                  filteredItems={filteredItems}
                   setItemAsDone={setItemAsDone}
                   sort={sort}
                 />

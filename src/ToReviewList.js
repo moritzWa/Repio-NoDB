@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     overflowX: "auto"
   },
   table: {
-    minWidth: 650
+    minWidth: 500
   },
   doneText: {
     margin: "2rem",
@@ -35,34 +35,6 @@ const useStyles = makeStyles({
 export default function ToReviewList(props) {
   const classes = useStyles()
 
-  //finnd item that has overdo reps
-  const filterOverDoItems = array => {
-    let arr = []
-    array.forEach(element => {
-      element.reps.forEach(rep => {
-        if (!rep.isDone && rep.date < new Date() && !arr.includes(element)) {
-          arr.push(element)
-        }
-      })
-    })
-    return arr //returns items
-  }
-
-  //get distence of overdo rep from filteredItem
-  const getOverDoDays = filteredItem => {
-    let DistenceForOneItem = filteredItem.reps.filter(rep => {
-      if (!rep.isDone && rep.date < new Date()) {
-        return rep
-      }
-    })
-    let NumOfDays = Math.floor(
-      (DistenceForOneItem[0].date - new Date()) / (1000 * 3600 * 24) + 1
-    )
-    return NumOfDays
-  }
-
-  let filteredItems = filterOverDoItems(props.items)
-
   return (
     <>
       <Paper className={classes.root}>
@@ -77,42 +49,28 @@ export default function ToReviewList(props) {
               </TableCell>
               <TableCell
                 className={classes.headCell}
-                onClick={() => props.sort("name")}
-              >
-                Last Repio
-              </TableCell>
-              <TableCell
-                className={classes.headCell}
-                onClick={() => props.sort("name")}
+                onClick={() => props.sort("overDoDays")}
               >
                 Overdo since
               </TableCell>
               <TableCell
                 className={classes.headCell}
-                onClick={() => props.sort("name")}
+                onClick={() => props.sort("category")}
               >
-                Tags
+                Category
               </TableCell>
-              <TableCell
-                className={classes.headCell}
-                onClick={() => props.sort("name")}
-              >
-                Actions
-              </TableCell>
+              <TableCell className={classes.headCell}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredItems.length > 0 ? (
-              filteredItems.map(item => (
+            {props.filteredItems.length > 0 ? (
+              props.filteredItems.map(item => (
                 <TableRow key={item.name}>
                   <TableCell component="th" scope="row">
                     {item.name}
                   </TableCell>
-                  <TableCell>
-                    {new Date(item.date).toLocaleDateString("en-US")}
-                  </TableCell>
-                  <TableCell>{getOverDoDays(item)}</TableCell>
-                  <TableCell>{item.tags}</TableCell>
+                  <TableCell>{item.overDoDays}</TableCell>
+                  <TableCell>{item.category}</TableCell>
                   <TableCell>
                     <IconButton
                       onClick={() => props.setItemAsDone(item.id)}

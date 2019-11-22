@@ -80,9 +80,9 @@ export default function AllList(props) {
               </TableCell>
               <TableCell
                 className={classes.headCell}
-                onClick={() => props.sort("tags")}
+                onClick={() => props.sort("category")}
               >
-                Tags
+                Category
               </TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -114,7 +114,7 @@ export default function AllList(props) {
                   </ExpansionPanel>
                 </TableCell>
                 <TableCell>{item.interval}</TableCell>
-                <TableCell>{item.tags}</TableCell>
+                <TableCell>{item.category}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {
