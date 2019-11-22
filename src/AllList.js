@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import IconButton from "@material-ui/core/IconButton"
 
@@ -12,6 +12,10 @@ import Paper from "@material-ui/core/Paper"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 
+import ExpansionPanel from "@material-ui/core/ExpansionPanel"
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary"
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+
 const useStyles = makeStyles({
   root: {
     width: "100%",
@@ -19,11 +23,30 @@ const useStyles = makeStyles({
   },
   table: {
     minWidth: 650
+  },
+  expansion: {
+    border: "none",
+    boxShadow: "none"
+  },
+  headCell: {
+    "&:hover": {
+      color: "grey",
+      cursor: "pointer",
+      transitionDuration: ".3s"
+    }
   }
 })
 
 export default function AllList(props) {
   const classes = useStyles()
+  const [items, setItems] = useState(props.items)
+
+  useEffect(() => {
+    setItems(props.items)
+  }, [props])
+
+  //bug page loads only after seccond click, tab change, additem()
+  //...  not when clicking sortfunnc or editing
 
   return (
     <>
@@ -31,18 +54,41 @@ export default function AllList(props) {
         <Table className={classes.table} aria-label="simple table">
           <TableHead className={classes.tableHeader}>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>created</TableCell>
-              <TableCell>learnDates</TableCell>
-              <TableCell>next</TableCell>
-              <TableCell>Reviews Done</TableCell>
-              <TableCell>interval</TableCell>
-              <TableCell>tags</TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("name")}
+              >
+                Name
+              </TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("date")}
+              >
+                Created
+              </TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("doneNum")}
+              >
+                Reviews
+              </TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("interval")}
+              >
+                Interval
+              </TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("tags")}
+              >
+                Tags
+              </TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.items.map(item => (
+            {items.map(item => (
               <TableRow key={item.name} id={item.name}>
                 <TableCell component="th" scope="row">
                   {item.name}
@@ -50,9 +96,23 @@ export default function AllList(props) {
                 <TableCell>
                   {new Date(item.date).toLocaleDateString("en-US")}
                 </TableCell>
-                <TableCell>test</TableCell>
-                <TableCell>test</TableCell>
-                <TableCell>{item.doneNum}/10</TableCell>
+                <TableCell>
+                  <ExpansionPanel className={classes.expansion}>
+                    <ExpansionPanelSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
+                      {item.doneNum}/10
+                    </ExpansionPanelSummary>
+
+                    <ol>
+                      {item.reps.map(i => (
+                        <li>{new Date(i.date).toLocaleDateString("en-US")}</li>
+                      ))}
+                    </ol>
+                  </ExpansionPanel>
+                </TableCell>
                 <TableCell>{item.interval}</TableCell>
                 <TableCell>{item.tags}</TableCell>
                 <TableCell>

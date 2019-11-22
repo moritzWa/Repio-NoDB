@@ -83,7 +83,7 @@ export default function RepioApp() {
   const initialLearnItems = [
     {
       id: 0,
-      name: "21 Lessons",
+      name: "AAA originally first",
       date: new Date("05/06/2018").toLocaleDateString("en-US"),
       reps: [
         {
@@ -157,7 +157,7 @@ export default function RepioApp() {
     },
     {
       id: 2,
-      name: "Zeroo",
+      name: "ZZZ originally seccond",
       date: new Date("2019-11-01").toLocaleDateString("en-US"),
       reps: [
         {
@@ -295,6 +295,40 @@ export default function RepioApp() {
     setItems(items.map(item => (item.id === id ? itemInProcess : item)))
   }
 
+  //======================= Sorting Locic =========================lll
+
+  function compareValues(key, order = "asc") {
+    return function(a, b) {
+      if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+        return 0
+      }
+
+      const varA = typeof a[key] === "string" ? a[key].toUpperCase() : a[key]
+      const varB = typeof b[key] === "string" ? b[key].toUpperCase() : b[key]
+
+      let comparison = 0
+      if (varA > varB) {
+        comparison = 1
+      } else if (varA < varB) {
+        comparison = -1
+      }
+      return order === "desc" ? comparison * -1 : comparison
+    }
+  }
+
+  const [isAsc, setDirectionToggler] = useState(true)
+
+  const sort = key => {
+    //create direction variable
+    let direction = isAsc ? "asc" : "desc"
+    //change sorting
+    let newOrder = items.sort(compareValues(key, direction))
+    //toggle diricton
+    setDirectionToggler(!isAsc)
+    setItems(newOrder)
+    console.log(key, direction, newOrder)
+  }
+
   return (
     <Paper className={classes.backgroundPaper} elevation={0}>
       <AppBar position="static" className={classes.headAppBar}>
@@ -345,13 +379,18 @@ export default function RepioApp() {
               onChangeIndex={handleChangeIndex}
             >
               <TabPanel value={value} index={0} dir={theme.direction}>
-                <ToReviewList items={items} setItemAsDone={setItemAsDone} />
+                <ToReviewList
+                  items={items}
+                  setItemAsDone={setItemAsDone}
+                  sort={sort}
+                />
               </TabPanel>
               <TabPanel value={value} index={1} dir={theme.direction}>
                 <AllList
                   items={items}
                   deleteItem={deleteItem}
                   editRow={editRow}
+                  sort={sort}
                 />
               </TabPanel>
               <TabPanel value={value} index={2} dir={theme.direction}>

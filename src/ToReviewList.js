@@ -9,6 +9,7 @@ import TableCell from "@material-ui/core/TableCell"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import Paper from "@material-ui/core/Paper"
+import Typography from "@material-ui/core/Typography"
 
 const useStyles = makeStyles({
   root: {
@@ -17,19 +18,22 @@ const useStyles = makeStyles({
   },
   table: {
     minWidth: 650
+  },
+  doneText: {
+    margin: "2rem",
+    textAlign: "center"
+  },
+  headCell: {
+    "&:hover": {
+      color: "grey",
+      cursor: "pointer",
+      transitionDuration: ".3s"
+    }
   }
 })
 
 export default function ToReviewList(props) {
   const classes = useStyles()
-
-  //look for overdo reps in obj
-  const filterOverDoRepsInOpj = item => {
-    let overdoReps = item.reps.filter(
-      rep => !rep.isDone && rep.date < new Date()
-    )
-    return overdoReps //returns reps
-  }
 
   //finnd item that has overdo reps
   const filterOverDoItems = array => {
@@ -44,55 +48,90 @@ export default function ToReviewList(props) {
     return arr //returns items
   }
 
-  let test = filterOverDoItems(props.items)
-  console.log(test)
+  //get distence of overdo rep from filteredItem
+  const getOverDoDays = filteredItem => {
+    let DistenceForOneItem = filteredItem.reps.filter(rep => {
+      if (!rep.isDone && rep.date < new Date()) {
+        return rep
+      }
+    })
+    let NumOfDays = Math.floor(
+      (DistenceForOneItem[0].date - new Date()) / (1000 * 3600 * 24) + 1
+    )
+    return NumOfDays
+  }
 
-  //OverDo Distence
-  //display DISTENCE of last overdo rep from one overdo item
-  let DistenceForOneItem = test[0].reps.filter(rep => {if(rep.isDone || rep.date < new Date()){ return rep}})
-  console.log((DistenceForOneItem.slice(-1)[0].date - new Date()) / (1000 * 3600 * 24))
-
- 
-
+  let filteredItems = filterOverDoItems(props.items)
 
   return (
     <>
       <Paper className={classes.root}>
         <Table className={classes.table} aria-label="simple table">
-          <TableHead className={classes.tableHeader}>
+          <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Review Dates</TableCell>
-              <TableCell>Overdo since</TableCell>
-              <TableCell>tags</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("name")}
+              >
+                Name
+              </TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("name")}
+              >
+                Last Repio
+              </TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("name")}
+              >
+                Overdo since
+              </TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("name")}
+              >
+                Tags
+              </TableCell>
+              <TableCell
+                className={classes.headCell}
+                onClick={() => props.sort("name")}
+              >
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filterOverDoItems(props.items).map(item => (
-              <TableRow key={item.name}>
-                <TableCell component="th" scope="row">
-                  {item.name}
-                </TableCell>
-                <TableCell>
-                  {new Date(item.date).toLocaleDateString("en-US")}
-                </TableCell>
-                <TableCell>
-                  test
-                </TableCell>
-                <TableCell>{item.tags}</TableCell>
-                <TableCell>
-                  <IconButton
-                    onClick={() => props.setItemAsDone(item.id)}
-                    color="primary"
-                    className={classes.button}
-                    aria-label="Review done"
-                  >
-                    <CheckIcon />
-                  </IconButton>
-                </TableCell>
+            {filteredItems.length > 0 ? (
+              filteredItems.map(item => (
+                <TableRow key={item.name}>
+                  <TableCell component="th" scope="row">
+                    {item.name}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(item.date).toLocaleDateString("en-US")}
+                  </TableCell>
+                  <TableCell>{getOverDoDays(item)}</TableCell>
+                  <TableCell>{item.tags}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => props.setItemAsDone(item.id)}
+                      color="primary"
+                      className={classes.button}
+                      aria-label="Review done"
+                    >
+                      <CheckIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <Typography className={classes.doneText}>
+                  You dont have any repios left. Nice.
+                </Typography>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </Paper>
