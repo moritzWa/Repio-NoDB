@@ -5,6 +5,8 @@ import AllList from "./AllList"
 import ToReviewList from "./ToReviewList"
 import AddForm from "./AddForm"
 import EditItemForm from "./EditItemForm"
+import More from "./More"
+import RepioLogo from "./RepioLogo.png"
 
 import SwipeableViews from "react-swipeable-views"
 
@@ -47,16 +49,18 @@ const useStyles = makeStyles(theme => ({
   backgroundPaper: {
     padding: 0,
     margin: 0,
+    borderRadius: 0,
     height: "100vh",
-    backgroundColor: "#505050",
-    borderRadius: 0
+    backgroundColor: "#505050"
   },
   headAppBar: { height: "64px", backgroundColor: "#4071BC" },
+  logo: { marginLeft: "1.6rem" },
   menuPaper: {
     margin: "1rem 1rem"
   },
   title: {
-    fontFamily: "Bitter"
+    fontFamily: "Bitter",
+    marginLeft: "20px"
   },
   appBar2: {
     borderRadius: "5px 5px 0 0"
@@ -64,9 +68,18 @@ const useStyles = makeStyles(theme => ({
   pageContent: {
     display: "flex"
   },
-  test: {
-    background: "blue",
-    padding: "0px"
+  paddingTabEl: {
+    "& > div": {
+      padding: "10px",
+      borderRadius: "0 0 5px 5px"
+    }
+  },
+  footer: {
+    height: "2vh",
+    padding: 0,
+    margin: 0,
+    borderRadius: 0,
+    backgroundColor: "#505050"
   }
 }))
 
@@ -77,9 +90,6 @@ export default function RepioApp() {
   const [value, setValue] = React.useState(0)
   const handleChange = (event, newValue) => {
     setValue(newValue)
-  }
-  const handleChangeIndex = index => {
-    setValue(index)
   }
 
   //======================  Business Logic  ======================//
@@ -252,7 +262,7 @@ export default function RepioApp() {
     category: ""
   }
 
-  //======================= expand item info =========================lll
+  //=============================== expand item info ============================//
 
   const createReps = item => {
     let repsArray = item.reps.map(i => ({
@@ -278,8 +288,7 @@ export default function RepioApp() {
     } else return 0
   }
 
-  //Setting state
-  //const [ users, setUsers ] = useState(usersData)
+  //===============================  Sorting Locic =================================//
 
   const [items, setItems] = useState(initialLearnItems)
   const [currentItem, setCurrentItem] = useState(initialFormState)
@@ -320,7 +329,46 @@ export default function RepioApp() {
     setItems(items.map(item => (item.id === id ? itemInProcess : item)))
   }
 
-  //======================= Sorting Locic =========================lll
+  //=============================== Category Locic =================================//
+
+  const initiaCategories = [
+    {
+      id: 1,
+      name: "Businessbook"
+    }
+  ]
+
+  const [categories, setCategories] = useState(initiaCategories)
+
+  const addCategory = category => {
+    //CRUD operations
+    category.id = categories.length + 1
+    setCategories([...categories, category])
+    console.log(categories)
+  }
+
+  const deleteCategory = id => {
+    //setEditing(false)
+    console.log(categories)
+    setCategories(categories.filter(category => category.id !== id))
+    console.log("deletefunc")
+  }
+  //=============================== Interval Locic =================================//
+
+  const initialIntervals = [
+    {
+      value: "1-2-3-4",
+      label: "longterm"
+    },
+    {
+      value: "1-1-3",
+      label: "shortterm"
+    }
+  ]
+
+  const [intervals, setIntervals] = useState(initialIntervals)
+
+  //=============================== Sorting Locic =================================//
 
   function compareValues(key, order = "asc") {
     return function(a, b) {
@@ -354,7 +402,7 @@ export default function RepioApp() {
     console.log(key, direction, newOrder)
   }
 
-  //======================= Filter for ToReview Locic =========================lll
+  //======================= Filter for ToReview Locic =========================//
 
   //finnd item that has overdo reps
   const filterOverDoItems = items => {
@@ -375,10 +423,19 @@ export default function RepioApp() {
 
   let filteredItems = filterOverDoItems(items)
 
+  //============================= Return ================================//
+
   return (
     <Paper className={classes.backgroundPaper} elevation={0}>
       <AppBar position="static" className={classes.headAppBar}>
         <Toolbar>
+          <img
+            className={classes.logo}
+            alt="logo"
+            src={RepioLogo}
+            height="50px"
+            width="50px"
+          />
           <Typography className={classes.title} variant="h6" noWrap>
             Repio - Spaced Repititon
           </Typography>
@@ -397,7 +454,7 @@ export default function RepioApp() {
             </>
           ) : (
             <>
-              <AddForm addLearnItem={addLearnItem} />
+              <AddForm addLearnItem={addLearnItem} intervals={intervals} />
             </>
           )}
           <Paper className={classes.menuPaper}>
@@ -416,7 +473,7 @@ export default function RepioApp() {
               >
                 <Tab label="To Review" {...a11yProps(0)} />
                 <Tab label="All" {...a11yProps(1)} />
-                <Tab label="Settings" {...a11yProps(2)} />
+                <Tab label="More" {...a11yProps(2)} />
               </Tabs>
             </AppBar>
             <SwipeableViews
@@ -424,19 +481,23 @@ export default function RepioApp() {
               index={value}
             >
               <TabPanel
-                className={classes.test}
+                className={classes.paddingTabEl}
                 value={value}
                 index={0}
                 dir={theme.direction}
               >
                 <ToReviewList
-                  className={classes.test}
                   filteredItems={filteredItems}
                   setItemAsDone={setItemAsDone}
                   sort={sort}
                 />
               </TabPanel>
-              <TabPanel value={value} index={1} dir={theme.direction}>
+              <TabPanel
+                className={classes.paddingTabEl}
+                value={value}
+                index={1}
+                dir={theme.direction}
+              >
                 <AllList
                   items={items}
                   deleteItem={deleteItem}
@@ -444,8 +505,17 @@ export default function RepioApp() {
                   sort={sort}
                 />
               </TabPanel>
-              <TabPanel value={value} index={2} dir={theme.direction}>
-                Item Three
+              <TabPanel
+                className={classes.paddingTabEl}
+                value={value}
+                index={2}
+                dir={theme.direction}
+              >
+                <More
+                  addCategory={addCategory}
+                  deleteCategory={deleteCategory}
+                  categories={categories}
+                />
               </TabPanel>
             </SwipeableViews>
           </Paper>

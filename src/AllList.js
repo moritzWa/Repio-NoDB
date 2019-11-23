@@ -108,12 +108,14 @@ export default function AllList(props) {
 
                     <ol>
                       {item.reps.map(i => (
-                        <li>{new Date(i.date).toLocaleDateString("en-US")}</li>
+                        <li key={i.date}>
+                          {new Date(i.date).toLocaleDateString("en-US")}
+                        </li>
                       ))}
                     </ol>
                   </ExpansionPanel>
                 </TableCell>
-                <TableCell>{item.interval}</TableCell>
+                <TableCell>{item.interval.label}</TableCell>
                 <TableCell>{item.category}</TableCell>
                 <TableCell>
                   <IconButton

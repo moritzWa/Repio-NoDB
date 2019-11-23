@@ -49,7 +49,7 @@ const intervals = [
   }
 ]
 
-export default function Form({ addLearnItem }) {
+export default function Form(props) {
   const classes = useStyles()
 
   const initialFormState = {
@@ -76,6 +76,7 @@ export default function Form({ addLearnItem }) {
   const handleInputChange = event => {
     const { name, value } = event.target
     setItem({ ...item, [name]: value })
+    console.log(value)
   }
 
   return (
@@ -84,7 +85,7 @@ export default function Form({ addLearnItem }) {
         className={classes.Form}
         onSubmit={e => {
           e.preventDefault()
-          addLearnItem(item)
+          props.addLearnItem(item)
           setItem(initialFormState)
         }}
       >
@@ -93,7 +94,6 @@ export default function Form({ addLearnItem }) {
           className={classes.FormItem}
           value={item.name}
           required
-          multiline
           label="Learn Item Name"
           placeholder="i.e. XYZ Podcast/Book"
           onChange={handleInputChange}
@@ -132,8 +132,8 @@ export default function Form({ addLearnItem }) {
             }
           }}
         >
-          {intervals.map(option => (
-            <MenuItem key={option.value} value={option.value}>
+          {props.intervals.map(option => (
+            <MenuItem key={option.value} value={option}>
               {option.label}
             </MenuItem>
           ))}
