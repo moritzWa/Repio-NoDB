@@ -116,7 +116,7 @@ export default function AllList(props) {
                   </ExpansionPanel>
                 </TableCell>
                 <TableCell>{item.interval.label}</TableCell>
-                <TableCell>{item.category}</TableCell>
+                <TableCell>{item.category.name}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {

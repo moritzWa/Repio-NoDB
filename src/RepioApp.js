@@ -167,8 +167,11 @@ export default function RepioApp() {
       ],
       doneNum: 8,
       overDoDays: 0,
-      interval: "shortterm",
-      category: "culture"
+      interval: {
+        value: "1-3-7",
+        label: "longterm(example)"
+      },
+      category: { name: "Culture", id: 1 }
     },
     {
       id: 2,
@@ -242,8 +245,11 @@ export default function RepioApp() {
       ],
       doneNum: 2,
       overDoDays: -41,
-      interval: "shortterm",
-      category: "business"
+      interval: {
+        value: "1-1-3",
+        label: "shortterm(example)"
+      },
+      category: { name: "BusinessBook", id: 2 }
     }
   ]
 
@@ -299,8 +305,11 @@ export default function RepioApp() {
     item.reps = createReps(item)
     item.overDoDays = createOverDoDays(item)
     item.id = items.length + 1
+    item.category === ""
+      ? (item.category = defaultCategory)
+      : (item.category = item.categorie)
     setItems([...items, item])
-    console.log(item)
+    console.log(item.category)
   }
 
   const deleteItem = id => {
@@ -332,10 +341,8 @@ export default function RepioApp() {
   //=============================== Category Locic =================================//
 
   const initiaCategories = [
-    {
-      id: 1,
-      name: "Businessbook"
-    }
+    { id: 1, name: "Businessbook" },
+    { id: 2, name: "Culture" }
   ]
 
   const [categories, setCategories] = useState(initiaCategories)
@@ -348,26 +355,46 @@ export default function RepioApp() {
   }
 
   const deleteCategory = id => {
-    //setEditing(false)
-    console.log(categories)
     setCategories(categories.filter(category => category.id !== id))
-    console.log("deletefunc")
+    console.log("deletefunc", categories)
   }
+
+  const initialDefaultCategory = { id: 1, name: "Businessbook" }
+  const [defaultCategory, setDefaultCategory] = useState(initialDefaultCategory)
+
+  const updateDefaultCategory = update => {
+    console.log("update default", update)
+    setDefaultCategory(update)
+  }
+
   //=============================== Interval Locic =================================//
 
   const initialIntervals = [
-    {
-      value: "1-2-3-4",
-      label: "longterm"
-    },
-    {
-      value: "1-1-3",
-      label: "shortterm"
-    }
+    { id: 0, value: "1-2-3-4", label: "longterm" },
+    { id: 0, value: "1-1-3", label: "shortterm" }
   ]
 
   const [intervals, setIntervals] = useState(initialIntervals)
 
+  const addInterval = interval => {
+    //CRUD operations
+    interval.id = intervals.length + 1
+    setIntervals([...intervals, interval])
+    console.log(intervals)
+  }
+
+  const deleteInterval = id => {
+    setIntervals(intervals.filter(interval => interval.id !== id))
+    console.log("deletefunc", intervals)
+  }
+
+  const initialDefaultInterval = { id: 0, value: "1-2-3-4", label: "longterm" }
+  const [defaultInterval, setDefaultInterval] = useState(initialDefaultCategory)
+
+  const updateDefaultInterval = update => {
+    console.log("update default", update)
+    setDefaultInterval(update)
+  }
   //=============================== Sorting Locic =================================//
 
   function compareValues(key, order = "asc") {
@@ -450,11 +477,18 @@ export default function RepioApp() {
                 setEditing={setEditing}
                 currentItem={currentItem}
                 updateItem={updateItem}
+                categories={categories}
+                defaultCategory={defaultCategory}
               />
             </>
           ) : (
             <>
-              <AddForm addLearnItem={addLearnItem} intervals={intervals} />
+              <AddForm
+                addLearnItem={addLearnItem}
+                intervals={intervals}
+                categories={categories}
+                defaultCategory={defaultCategory}
+              />
             </>
           )}
           <Paper className={classes.menuPaper}>
@@ -512,9 +546,19 @@ export default function RepioApp() {
                 dir={theme.direction}
               >
                 <More
+                  categories={categories}
                   addCategory={addCategory}
                   deleteCategory={deleteCategory}
-                  categories={categories}
+                  //
+                  defaultCategory={defaultCategory}
+                  updateDefaultCategory={updateDefaultCategory}
+                  //
+                  intervals={intervals}
+                  addInterval={addInterval}
+                  deleteInterval={deleteInterval}
+                  //
+                  defaultInterval={defaultInterval}
+                  updateDefaultInterval={updateDefaultInterval}
                 />
               </TabPanel>
             </SwipeableViews>

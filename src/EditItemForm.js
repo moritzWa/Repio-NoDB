@@ -14,16 +14,21 @@ const useStyles = makeStyles(theme => ({
   FormItem: {
     margin: "10px"
   },
-  selectEmpty: {
-    marginTop: theme.spacing(3.2)
+  FormItemDate: {
+    margin: "10px",
+    width: "120px"
   },
-  submitButton: {
-    margiaen: "20px"
+  FormItemReviews: {
+    margin: "10px",
+    width: "80px"
   },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
+  FormItemSelect: {
+    margin: "10px",
     width: "100px"
+  },
+
+  submitButton: {
+    margin: "20px 10px"
   },
   menu: {
     width: 200
@@ -77,7 +82,7 @@ export default function EditItemForm(props) {
         />
         <TextField
           name="date"
-          className={classes.FormItem}
+          className={classes.FormItemDate}
           value={item.date}
           id="date"
           label="Date added"
@@ -89,7 +94,7 @@ export default function EditItemForm(props) {
         />
         <TextField
           name="doneNum"
-          className={classes.FormItem}
+          className={classes.FormItemReviews}
           type="number"
           value={item.doneNum}
           label="Reviews done"
@@ -97,36 +102,38 @@ export default function EditItemForm(props) {
         />
         <TextField
           name="interval"
-          className={classes.textField}
+          className={classes.FormItemSelect}
           value={item.interval}
           select
           label="Interval"
           onChange={handleInputChange}
-          defaultValue="longterm"
-          SelectProps={{
-            MenuProps: {
-              className: classes.menu
-            }
-          }}
         >
           {intervals.map(option => (
-            <MenuItem key={option.value} value={option.value}>
+            <MenuItem key={option.value} value={option}>
               {option.label}
             </MenuItem>
           ))}
         </TextField>
         <TextField
           name="category"
+          className={classes.FormItemSelect}
           value={item.category}
           onChange={handleInputChange}
           label="Category"
-        />
-
+          select
+        >
+          {props.categories.map(option => (
+            <MenuItem key={option.id} value={option}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </TextField>
         <Button
           className={classes.submitButton}
           type="submit"
           startIcon={<SaveIcon />}
           color="primary"
+          variant="outlined"
         >
           Save Changes
         </Button>

@@ -4,8 +4,8 @@ import {
   Divider,
   TextField,
   Chip,
-  Select,
-  MenuItem
+  MenuItem,
+  Button
 } from "@material-ui/core"
 
 import { makeStyles } from "@material-ui/core/styles"
@@ -34,7 +34,6 @@ const useStyles = makeStyles({
   },
   menuSubItem: {
     fontSize: "14px",
-    padding: "10px",
     paddingBottom: "5px",
     fontWeight: "bolder",
     padding: "15px 0",
@@ -55,6 +54,11 @@ const useStyles = makeStyles({
     display: "inline-block",
     maxWidth: "100px"
   },
+  addCategoryForm: {
+    minWidth: "200px",
+    maxHeight: "40px"
+  },
+  addCategoryFormInput: { maxWidth: "110px", marginRight: "20px" },
   chips: {
     display: "flex",
     flexWrap: "wrap",
@@ -70,48 +74,80 @@ const useStyles = makeStyles({
     width: "100%",
     margin: "20px 0",
     padding: ".3px"
+  },
+  videoEmbed: {
+    width: "100%",
+    height: "275px"
   }
 })
 
 export default function More(props) {
   const classes = useStyles()
 
-  const initialFormState = {
-    categories: [{ id: 5, name: "" }],
-    intervals: [{ name: "longterm", value: [1, 7, 14, 28, 56, 112, 224] }]
-  }
+  const initialFormStateCategory = { id: null, name: "" }
 
-  const [category, setCategory] = useState(initialFormState)
-  const [defaultCategory, setDefaultCategory] = useState("")
+  const initialFormStateInterval = { id: null, label: "", value: "" }
 
-  const handleInputChange = event => {
+  const [category, setCategory] = useState(initialFormStateCategory)
+  const [defaultCategory, setDefaultCategory] = useState(props.defaultCategory)
+
+  const handleInputChangeCategories = event => {
     const { name, value } = event.target
     setCategory({ ...category, [name]: value })
+    console.log(value)
+  }
+  const handleInputChangeDefaultCategory = event => {
+    const { value } = event.target
+    setDefaultCategory(value)
+    props.updateDefaultCategory(value)
+    console.log(value)
+  }
+
+  const [interval, setInterval] = useState(initialFormStateInterval)
+  const [defaultInterval, setDefaultInterval] = useState(props.defaultInterval)
+
+  const handleInputChangeInterval = event => {
+    const { name, value } = event.target
+    setInterval({ ...interval, [name]: value })
+    console.log(event.target.name)
+  }
+  const handleInputChangeDefaultInterval = event => {
+    const { value } = event.target
+    setDefaultInterval(value)
+    props.updateDefaultInterval(value)
     console.log(value)
   }
 
   return (
     <div className={classes.root}>
       <div className={classes.menuItem}>Settings</div>
-      <div className={classes.menuSubItem}>Category</div>
 
       <Paper className={classes.settingArea}>
+        <div className={classes.menuSubItem}>Categories</div>
+
         <div className={classes.label}>Create new Category</div>
         <div className={classes.settingTool}>
-          <form
-            className={classes.Form}
-            onSubmit={e => {
-              e.preventDefault()
-              props.addCategory(category)
-            }}
-          >
+          <form className={classes.addCategoryForm}>
             <TextField
               name="name"
+              className={classes.addCategoryFormInput}
               value={category.name}
               required
               placeholder="i.e. Business"
-              onChange={handleInputChange}
+              onChange={handleInputChangeCategories}
             />
+            <Button
+              className={classes.saveButton}
+              color="primary"
+              type="submit"
+              onClick={e => {
+                e.preventDefault()
+                props.addCategory(category)
+                setCategory(initialFormStateCategory)
+              }}
+            >
+              Save
+            </Button>
           </form>
         </div>
 
@@ -119,8 +155,8 @@ export default function More(props) {
         <div className={classes.chips}>
           {props.categories.map(cat => (
             <Chip
+              key={cat.name}
               className={classes.chip}
-              test={console.log(cat.name)}
               label={cat.name}
               onDelete={() => props.deleteCategory(cat.id)}
             />
@@ -131,21 +167,81 @@ export default function More(props) {
         <div className={classes.settingTool}>
           <TextField
             name="defaultCategory"
-            className={classes.FormItemSelect}
-            value={defaultCategory}
             select
-            label="Default"
-            onChange={handleInputChange}
-            defaultValue="Businessbook"
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
+            value={defaultCategory}
+            onChange={handleInputChangeDefaultCategory}
           >
             {props.categories.map(option => (
-              <MenuItem key={option.value} value={option}>
+              <MenuItem key={option.id} value={option}>
                 {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+
+        {/* =======================Intervals======================== */}
+
+        <Divider className={classes.divider} />
+
+        <div className={classes.menuSubItem}>Intervals</div>
+
+        <div className={classes.label}>Create new Interval</div>
+        <div className={classes.settingTool}>
+          <form className={classes.addCategoryForm}>
+            <TextField
+              name="label"
+              className={classes.addCategoryFormInput}
+              value={interval.label}
+              required
+              placeholder="ie Pitch on Thu"
+              onChange={handleInputChangeInterval}
+            />
+            <TextField
+              name="value"
+              className={classes.addCategoryFormInput}
+              value={interval.value}
+              required
+              placeholder="ie 1-7-28-112"
+              onChange={handleInputChangeInterval}
+            />
+            <Button
+              className={classes.saveButton}
+              color="primary"
+              type="submit"
+              onClick={e => {
+                e.preventDefault()
+                props.addInterval(interval)
+                setInterval(initialFormStateInterval)
+              }}
+            >
+              Save
+            </Button>
+          </form>
+        </div>
+
+        <div className={classes.label}>my Intervals:</div>
+        <div className={classes.chips}>
+          {props.intervals.map(int => (
+            <Chip
+              key={int.label}
+              className={classes.chip}
+              label={int.label}
+              onDelete={() => props.deleteInterval(int.id)}
+            />
+          ))}
+        </div>
+
+        <div className={classes.label}>Choose defauld interval</div>
+        <div className={classes.settingTool}>
+          <TextField
+            name="defaultInterval"
+            select
+            value={defaultInterval}
+            onChange={handleInputChangeDefaultInterval}
+          >
+            {props.intervals.map(option => (
+              <MenuItem key={option.id} value={option}>
+                {option.label}
               </MenuItem>
             ))}
           </TextField>
@@ -162,10 +258,10 @@ export default function More(props) {
 
       <div className={classes.menuItem}>About</div>
       <div className={classes.label}>What is Spaced Repitition?</div>
+      <div>video link turned of cuz of chrome dev tools warning</div>
       <iframe
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/cVf38y07cfk"
+        className={classes.videoEmbed}
+        //src="https://www.youtube.com/embed/cVf38y07cfk"
         frameBorder="0"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen

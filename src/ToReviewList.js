@@ -70,7 +70,7 @@ export default function ToReviewList(props) {
                     {item.name}
                   </TableCell>
                   <TableCell>{item.overDoDays}</TableCell>
-                  <TableCell>{item.category}</TableCell>
+                  <TableCell>{item.category.name}</TableCell>
                   <TableCell>
                     <IconButton
                       onClick={() => props.setItemAsDone(item.id)}

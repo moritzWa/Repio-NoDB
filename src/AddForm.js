@@ -26,12 +26,9 @@ const useStyles = makeStyles(theme => ({
     margin: "10px",
     width: "100px"
   },
-  FormItemTags: {
-    margin: "10px",
-    width: "100px"
-  },
+
   submitButton: {
-    margin: "20px"
+    margin: "20px 10px"
   },
   menu: {
     width: 200
@@ -45,7 +42,7 @@ const intervals = [
   },
   {
     value: "1-1-3",
-    label: "shortterm"
+    label: "test"
   }
 ]
 
@@ -57,7 +54,10 @@ export default function Form(props) {
     name: "",
     date: new Date(),
     doneNum: 0,
-    interval: "",
+    interval: {
+      value: "1-1-3",
+      label: "test"
+    },
     reps: [
       { Nr: 1, distence: 1 },
       { Nr: 2, distence: 7 },
@@ -76,7 +76,6 @@ export default function Form(props) {
   const handleInputChange = event => {
     const { name, value } = event.target
     setItem({ ...item, [name]: value })
-    console.log(value)
   }
 
   return (
@@ -125,12 +124,6 @@ export default function Form(props) {
           select
           label="Interval"
           onChange={handleInputChange}
-          defaultValue="longterm"
-          SelectProps={{
-            MenuProps: {
-              className: classes.menu
-            }
-          }}
         >
           {props.intervals.map(option => (
             <MenuItem key={option.value} value={option}>
@@ -138,21 +131,29 @@ export default function Form(props) {
             </MenuItem>
           ))}
         </TextField>
+
         <TextField
           name="category"
-          className={classes.FormItemTags}
+          className={classes.FormItemSelect}
           value={item.category}
           onChange={handleInputChange}
           label="Category"
-        />
-
+          select
+        >
+          {props.categories.map(option => (
+            <MenuItem key={option.id} value={option}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </TextField>
         <Button
           className={classes.submitButton}
           type="submit"
           startIcon={<SaveIcon />}
           color="primary"
+          variant="outlined"
         >
-          Save
+          Add Item
         </Button>
       </form>
     </Paper>
