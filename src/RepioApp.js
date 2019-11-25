@@ -269,8 +269,18 @@ export default function RepioApp() {
   }
 
   //=============================== expand item info ============================//
+  const createRepsStructure = () => {
+    let repsArrayStructure = []
+    let usedInterval = [1, 7, 14, 28, 56, 112, 224, 448]
+    usedInterval.forEach(el =>
+      repsArrayStructure.push({ Nr: [el], distence: el })
+    )
+    return repsArrayStructure
+  }
+  createRepsStructure()
+  console.log(createRepsStructure())
 
-  const createReps = item => {
+  const createRepsData = item => {
     let repsArray = item.reps.map(i => ({
       ...i,
       isDone: item.doneNum >= i.Nr ? true : false,
@@ -278,6 +288,7 @@ export default function RepioApp() {
     }))
     return repsArray
   }
+  //===============================  Sorting Locic =================================//
 
   //get distence of overdo rep from filteredItem
   const createOverDoDays = item => {
@@ -294,7 +305,7 @@ export default function RepioApp() {
     } else return 0
   }
 
-  //===============================  Sorting Locic =================================//
+  //===============================  CRUD Ops =================================//
 
   const [items, setItems] = useState(initialLearnItems)
   const [currentItem, setCurrentItem] = useState(initialFormState)
@@ -302,14 +313,22 @@ export default function RepioApp() {
 
   const addLearnItem = item => {
     //CRUD operations
-    item.reps = createReps(item)
+    item.reps = createRepsData(item)
     item.overDoDays = createOverDoDays(item)
     item.id = items.length + 1
-    item.category === ""
+
+    item.category.name === ""
       ? (item.category = defaultCategory)
-      : (item.category = item.categorie)
+      : (item.category = item.category)
+
+    item.interval.label === ""
+      ? (item.interval = defaultInterval)
+      : (item.interval = item.interval)
+
     setItems([...items, item])
-    console.log(item.category)
+
+    console.log(defaultCategory, item.category)
+    console.log(defaultInterval, item.interval)
   }
 
   const deleteItem = id => {
@@ -324,7 +343,7 @@ export default function RepioApp() {
 
   const updateItem = (id, updatedItem) => {
     setEditing(false)
-    updatedItem.reps = createReps(updatedItem)
+    updatedItem.reps = createRepsData(updatedItem)
     setItems(items.map(item => (item.id === id ? updatedItem : item)))
   }
 
@@ -333,7 +352,7 @@ export default function RepioApp() {
     setEditing(false)
     let itemInProcess = items.find(item => item.id === id)
     itemInProcess.doneNum = Number(itemInProcess.doneNum) + 1
-    itemInProcess.reps = createReps(itemInProcess)
+    itemInProcess.reps = createRepsData(itemInProcess)
 
     setItems(items.map(item => (item.id === id ? itemInProcess : item)))
   }
@@ -389,7 +408,7 @@ export default function RepioApp() {
   }
 
   const initialDefaultInterval = { id: 0, value: "1-2-3-4", label: "longterm" }
-  const [defaultInterval, setDefaultInterval] = useState(initialDefaultCategory)
+  const [defaultInterval, setDefaultInterval] = useState(initialDefaultInterval)
 
   const updateDefaultInterval = update => {
     console.log("update default", update)

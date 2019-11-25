@@ -225,7 +225,7 @@ export default function More(props) {
             <Chip
               key={int.label}
               className={classes.chip}
-              label={int.label}
+              label={`${int.label}: ${JSON.stringify(int.value)}`}
               onDelete={() => props.deleteInterval(int.id)}
             />
           ))}

@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
   FormItemDate: {
     margin: "10px",
-    width: "120px"
+    width: "135px"
   },
   FormItemReviews: {
     margin: "10px",
@@ -35,17 +35,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const intervals = [
-  {
-    value: "1-2-3-4",
-    label: "longterm"
-  },
-  {
-    value: "1-1-3",
-    label: "test"
-  }
-]
-
 export default function Form(props) {
   const classes = useStyles()
 
@@ -55,8 +44,8 @@ export default function Form(props) {
     date: new Date(),
     doneNum: 0,
     interval: {
-      value: "1-1-3",
-      label: "test"
+      value: "",
+      label: ""
     },
     reps: [
       { Nr: 1, distence: 1 },
@@ -68,7 +57,7 @@ export default function Form(props) {
       { Nr: 7, distence: 224 },
       { Nr: 8, distence: 448 }
     ],
-    category: ""
+    category: { id: "", name: "" }
   }
 
   const [item, setItem] = useState(initialFormState)

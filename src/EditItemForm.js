@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
   FormItemDate: {
     margin: "10px",
-    width: "120px"
+    width: "135px"
   },
   FormItemReviews: {
     margin: "10px",
