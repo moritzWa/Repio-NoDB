@@ -47,16 +47,6 @@ export default function Form(props) {
       value: "",
       label: ""
     },
-    reps: [
-      { Nr: 1, distence: 1 },
-      { Nr: 2, distence: 7 },
-      { Nr: 3, distence: 14 },
-      { Nr: 4, distence: 28 },
-      { Nr: 5, distence: 56 },
-      { Nr: 6, distence: 112 },
-      { Nr: 7, distence: 224 },
-      { Nr: 8, distence: 448 }
-    ],
     category: { id: "", name: "" }
   }
 

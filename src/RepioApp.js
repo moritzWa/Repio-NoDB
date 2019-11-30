@@ -168,8 +168,9 @@ export default function RepioApp() {
       doneNum: 8,
       overDoDays: 0,
       interval: {
-        value: "1-3-7",
-        label: "longterm(example)"
+        value: [1, 7, 14, 28, 56, 112, 224, 448],
+        label: "longterm(example)",
+        id: 0
       },
       category: { name: "Culture", id: 1 }
     },
@@ -246,8 +247,9 @@ export default function RepioApp() {
       doneNum: 2,
       overDoDays: -41,
       interval: {
-        value: "1-1-3",
-        label: "shortterm(example)"
+        value: [1, 4, 7, 10, 14, 21, 28, 32, 56],
+        label: "shortterm(example)",
+        id: 1
       },
       category: { name: "BusinessBook", id: 2 }
     }
@@ -269,18 +271,17 @@ export default function RepioApp() {
   }
 
   //=============================== expand item info ============================//
-  const createRepsStructure = () => {
+  const createRepsStructure = usedInterval => {
     let repsArrayStructure = []
-    let usedInterval = [1, 7, 14, 28, 56, 112, 224, 448]
-    usedInterval.forEach(el =>
-      repsArrayStructure.push({ Nr: [el], distence: el })
-    )
+
+    for (let i = 0; i < usedInterval.length; i++) {
+      repsArrayStructure.push({ Nr: i + 1, distence: usedInterval[i] })
+    }
     return repsArrayStructure
   }
-  createRepsStructure()
-  console.log(createRepsStructure())
 
   const createRepsData = item => {
+    item.reps = createRepsStructure(item.interval.value)
     let repsArray = item.reps.map(i => ({
       ...i,
       isDone: item.doneNum >= i.Nr ? true : false,
@@ -290,7 +291,7 @@ export default function RepioApp() {
   }
   //===============================  Sorting Locic =================================//
 
-  //get distence of overdo rep from filteredItem
+  //get distence of overdo rep
   const createOverDoDays = item => {
     let overDoReps = item.reps.filter(rep => {
       if (!rep.isDone && rep.date < new Date()) {
@@ -313,10 +314,6 @@ export default function RepioApp() {
 
   const addLearnItem = item => {
     //CRUD operations
-    item.reps = createRepsData(item)
-    item.overDoDays = createOverDoDays(item)
-    item.id = items.length + 1
-
     item.category.name === ""
       ? (item.category = defaultCategory)
       : (item.category = item.category)
@@ -324,6 +321,10 @@ export default function RepioApp() {
     item.interval.label === ""
       ? (item.interval = defaultInterval)
       : (item.interval = item.interval)
+
+    item.reps = createRepsData(item)
+    item.overDoDays = createOverDoDays(item)
+    item.id = items.length + 1
 
     setItems([...items, item])
 
@@ -344,6 +345,7 @@ export default function RepioApp() {
   const updateItem = (id, updatedItem) => {
     setEditing(false)
     updatedItem.reps = createRepsData(updatedItem)
+    updatedItem.overDoDays = createOverDoDays(updatedItem)
     setItems(items.map(item => (item.id === id ? updatedItem : item)))
   }
 
@@ -389,8 +391,8 @@ export default function RepioApp() {
   //=============================== Interval Locic =================================//
 
   const initialIntervals = [
-    { id: 0, value: "1-2-3-4", label: "longterm" },
-    { id: 0, value: "1-1-3", label: "shortterm" }
+    { id: 0, value: [1, 7, 14, 28, 56, 112, 224, 448], label: "Longterm" },
+    { id: 1, value: [1, 4, 7, 10, 14, 21, 28, 38], label: "Shortterm" }
   ]
 
   const [intervals, setIntervals] = useState(initialIntervals)
@@ -398,6 +400,7 @@ export default function RepioApp() {
   const addInterval = interval => {
     //CRUD operations
     interval.id = intervals.length + 1
+    interval.value = interval.value.split('-').map(Number)
     setIntervals([...intervals, interval])
     console.log(intervals)
   }
@@ -407,7 +410,11 @@ export default function RepioApp() {
     console.log("deletefunc", intervals)
   }
 
-  const initialDefaultInterval = { id: 0, value: "1-2-3-4", label: "longterm" }
+  const initialDefaultInterval = {
+    id: 0,
+    value: [1, 7, 14, 28, 56, 112, 224, 448],
+    label: "Longterm"
+  }
   const [defaultInterval, setDefaultInterval] = useState(initialDefaultInterval)
 
   const updateDefaultInterval = update => {
